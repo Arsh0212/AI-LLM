@@ -29,10 +29,10 @@ A powerful Streamlit-based natural language interface to query your SQL database
 ---
 
 ## 🏗️ Project Structure
-📁 SQL-LLM/
-├── main.py # Streamlit app logic
-├── requirements.txt # Python dependencies
-├── README.md # This file
+📁 SQL-LLM/  
+├── main.py # Streamlit app logic  
+├── requirements.txt # Python dependencies  
+├── README.md # This file  
 
 ---
 
