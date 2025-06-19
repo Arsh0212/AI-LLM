@@ -42,7 +42,7 @@ A powerful Streamlit-based natural language interface to query your SQL database
 
 ```bash
 git clone https://github.com/Arsh0212/AI-LLM/SQL-LLM.git
-cd sql-langchain-assistant
+cd SQL-LLM
 ```
 
 ### 2. Install dependencies
