@@ -52,16 +52,7 @@ Make sure you’re using Python 3.9+ and run:
 pip install -r requirements.txt
 ```
 
-3. ### Configurations
-Replace your Gemini API key in SQL_Model class:
-
-self.YOUR_API_KEY = "your_google_api_key"
-
-Update your MySQL connection string too:
-
-self.db_uri = "mysql+mysqlconnector://user:password@localhost:3306/your_db"
-
-### 4. Run the Streamlit app
+### 3. Run the Streamlit app
 
 ```bash
 streamlit run main.py
