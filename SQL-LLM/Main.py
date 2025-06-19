@@ -38,6 +38,7 @@ class SQL_Model():
         self.db = SQLDatabase.from_uri(self.db_uri)
 
     # Basic function to get the schema of the database
+    # Please note that we have given a dummy argument (_) the reason will be clarified in main_aql_chain
     def get_schema(self,_):
         return self.db.get_table_info()
 
@@ -46,7 +47,7 @@ class SQL_Model():
         try:
             return self.db.run(query)
         except Exception as e:
-            st.write("SQL Error:" ,str(e)
+            st.write("SQL Error:" ,str(e))
     
 
 # Contructing class instance
@@ -79,7 +80,7 @@ sql_chain = (
     | CleanSQLParser()
 )  
 
-
+# Now we create the main template design string
 main_template = """
 Based on the sql schema, question, sql query, and sql response, run the query and return the response in tabular form:
 {schema}
@@ -93,19 +94,27 @@ SQL Query:
 Response:
 
 """
-
+# Main prompt is created
 main_prompt = ChatPromptTemplate.from_template(main_template)
 
+# The main final chain is created
+# While invoking, the main chain will only get the user_question as {"question": user_question}
 main_sql_chain = (
+    # 1. RunnablePassThrough will take {"question" : user_question} and return {"question" : user_question, "query" : sql_code}
     RunnablePassthrough.assign(query=sql_chain)
-    | RunnablePassthrough.assign(schema = SM.get_schema,
-            response = lambda x:SM.run_query(x["query"])
+    # 2. The output dict from previous runnable will be fed to all the functions in next runnable(both to SM.get_schema and lambda x)
+    | RunnablePassthrough.assign(schema = SM.get_schema, ### The reason for dummy argument is that the runnable will pass the dict even if we don't need it to
+            response = lambda x:SM.run_query(x["query"]) # The function will find the SQL Code and run it and feed it to response
     )
+    # 3. The output of the runnable consist of a dictionary with keys as (question->query->schema->response) and will be fed to prompt
     | main_prompt
+    # 4. The prompt along with it's parameters are send to LLM-model
     | SM.llm
+    # 5. The LLM response is formatted 
     | StrOutputParser()
 )
 
+# We are using Streamlit to create an UI
 st.title("SQL_LLM")
 st.write("A database schema has been uploaded to the LLM")
 st.write("Write any question in natural language")
@@ -113,6 +122,5 @@ question = st.text_input("Ask any question regarding database:")
 if question:
     with st.spinner("Generating response..."):
         response = main_sql_chain.invoke({"question": question})
-
     st.write(response)
     
