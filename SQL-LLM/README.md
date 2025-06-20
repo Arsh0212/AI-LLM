@@ -4,6 +4,9 @@ A powerful Streamlit-based natural language interface to query your SQL database
 
 ---
 
+![image](https://github.com/user-attachments/assets/bad9e6b0-6565-478f-aeb1-6a0dc689294c)
+
+
 ## 🚀 Features
 
 - 🧠 Ask questions in plain English.
