@@ -3,8 +3,9 @@
 A powerful Streamlit-based natural language interface to query your SQL database using [Google Gemini LLM](https://ai.google), powered by [LangChain](https://www.langchain.com/) and `mysql-connector`.
 
 ---
+![Mermaid x SQL](https://github.com/user-attachments/assets/c027b6df-0780-49b9-9e94-8637439470a2)
 
-![image](https://github.com/user-attachments/assets/bad9e6b0-6565-478f-aeb1-6a0dc689294c)
+
 
 
 ## 🚀 Features
