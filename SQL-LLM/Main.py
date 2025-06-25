@@ -1,7 +1,7 @@
 from langchain_core.prompts import ChatPromptTemplate 
 from langchain_community.utilities import SQLDatabase
 from langchain_core.output_parsers import StrOutputParser
-from langchain_core.runnables import RunnablePassthrough
+from langchain_core.runnables import RunnablePassthrough,RunnableParallel
 from langchain_google_genai import ChatGoogleGenerativeAI
 import streamlit as st
 
@@ -29,11 +29,11 @@ class SQL_Model():
             google_api_key=self.YOUR_API_KEY,
             # Specifying the creativeness of the response
             # Keeping the temperature minimum to get simple and repeated response, with minimum experimentation
-            temperature = 0.1
+            temperature = 1
         )
         # writing a connection establishing string
         # Provide the password,host,domain and database name
-        self.db_uri = "mysql+mysqlconnector://root:PASSWORD@HOST:DOMAIN/DATABASE"
+        self.db_uri = "mysql+mysqlconnector://root:password!!!@localhost:3306/chinook"
         # Establishing Database Connection
         self.db = SQLDatabase.from_uri(self.db_uri)
 
@@ -49,7 +49,6 @@ class SQL_Model():
         except Exception as e:
             st.write("SQL Error:" ,str(e))
     
-
 # Contructing class instance
 SM = SQL_Model()
 
@@ -100,10 +99,8 @@ main_prompt = ChatPromptTemplate.from_template(main_template)
 # The main final chain is created
 # While invoking, the main chain will only get the user_question as {"question": user_question}
 main_sql_chain = (
-    # 1. RunnablePassThrough will take {"question" : user_question} and return {"question" : user_question, "query" : sql_code}
-    RunnablePassthrough.assign(query=sql_chain)
     # 2. The output dict from previous runnable will be fed to all the functions in next runnable(both to SM.get_schema and lambda x)
-    | RunnablePassthrough.assign(schema = SM.get_schema, ### The reason for dummy argument is that the runnable will pass the dict even if we don't need it to
+    RunnablePassthrough.assign(schema = SM.get_schema, ### The reason for dummy argument is that the runnable will pass the dict even if we don't need it to
             response = lambda x:SM.run_query(x["query"]) # The function will find the SQL Code and run it and feed it to response
     )
     # 3. The output of the runnable consist of a dictionary with keys as (question->query->schema->response) and will be fed to prompt
@@ -114,6 +111,33 @@ main_sql_chain = (
     | StrOutputParser()
 )
 
+
+mermaid_template = """
+Based on the SQL Code given below , write a Mermaid code to form a grapg explaining the working to the code.
+The syntax does not accept brackets of any kind in the label.
+SQL Query: {query}
+
+Answer
+Mermaid(10.2.4) Code:
+
+"""
+mermaid_prompt = ChatPromptTemplate.from_template(mermaid_template)
+ 
+mermaid_chain = (
+    mermaid_prompt
+    |SM.llm
+    |StrOutputParser()
+    
+)
+
+main_chain = (
+    # 1. RunnablePassThrough will take {"question" : user_question} and return {"question" : user_question, "query" : sql_code}
+    RunnablePassthrough.assign(query=sql_chain)
+    |RunnableParallel(
+        mermaid = mermaid_chain,
+        response = main_sql_chain
+    )
+)
 # We are using Streamlit to create an UI
 st.title("SQL_LLM")
 st.write("A database schema has been uploaded to the LLM")
@@ -121,6 +145,7 @@ st.write("Write any question in natural language")
 question = st.text_input("Ask any question regarding database:")
 if question:
     with st.spinner("Generating response..."):
-        response = main_sql_chain.invoke({"question": question})
-    st.write(response)
+        response = main_chain.invoke({"question": question})
+        st.write(response["response"])
+        st.sidebar.write(response["mermaid"])
     
