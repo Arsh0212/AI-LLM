@@ -26,13 +26,13 @@ The workflow:
 
 project/
 │
-├── stocks/
-│ ├── database_management.py # Handles DB CRUD operations
-│
-├── fetch_data.py # Scrapes and stores articles
-├── para_processing.py # Splits, embeds, and queries articles
-├── requirements.txt # Python dependencies
-├── README.md # Project documentation
+├── stocks/   
+│ ├── database_management.py # Handles DB CRUD operations   
+│ 
+├── fetch_data.py # Scrapes and stores articles   
+├── para_processing.py # Splits, embeds, and queries articles   
+├── requirements.txt # Python dependencies   
+├── README.md # Project documentation   
 
 ---
 
