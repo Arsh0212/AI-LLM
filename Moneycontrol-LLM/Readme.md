@@ -40,8 +40,8 @@ project/
 
 ### 1️⃣ Clone the Repository
 ```bash
-git clone https://github.com/yourusername/moneycontrol-news-query.git
-cd moneycontrol-news-query
+git clone https://github.com/Arsh0212/AI-LLM/tree/main/Moneycontrol-LLM.git
+cd Moneycontrol-LLM
 ```
 
 ### 2️⃣ Install Dependencies
