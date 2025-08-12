@@ -52,7 +52,7 @@ pip install -r requirements.txt
 ### 3️⃣ Set Environment Variables
 Create a .env file or set environment variables in your shell:
 ```bash
-export DATABASE_URL="postgresql://username:password@localhost:5432/Gold"
+export DATABASE_URL="postgresql://username:password@localhost:5432/DataBase_Name"
 export GOOGLE_API_KEY="your_google_api_key_here"
 ```
 
