@@ -26,11 +26,10 @@ The workflow:
 
 project/
 │
-├── stocks/   
-│ ├── database_management.py # Handles DB CRUD operations   
-│ 
-├── fetch_data.py # Scrapes and stores articles   
-├── para_processing.py # Splits, embeds, and queries articles   
+├── Moneycontrol-LLM/   
+├── DB-CRUD.py # Handles DB CRUD operations    
+├── Fetchdata.py # Scrapes and stores articles   
+├── Main.py # Splits, embeds, and queries articles   
 ├── requirements.txt # Python dependencies   
 ├── README.md # Project documentation   
 
@@ -68,13 +67,13 @@ CREATE TABLE news_articles (
 
 ### 5️⃣ Fetch News Data
 ```bash
-python fetch_data.py
+python Fetchdata.py
 ```
 This will scrape Moneycontrol news and store it in your PostgreSQL database.
 
 ### 6️⃣ Query the News
 ```bash
-python para_processing.py
+python Main.py
 ```
 Enter a keyword to filter articles from the database.
 Enter your natural language question to get an AI-generated answer.
